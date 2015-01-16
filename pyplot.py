@@ -7,19 +7,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 
-def getPalette(n):
-    dx = 0.1
-    colormap = plt.cm.rainbow
+def getPalette(n,colormap = plt.cm.rainbow, dx =0.1):
+    """Returns a custom list of colors n colors that work well when used together on a plot.
+
+    Arguments:
+    n -- the total number of colors
+    
+    Keyword Argumnts:
+    colormap -- the base colormap to use to instantiate the colors.
+    dx -- the symmetric distance to set from the end point of the colormap (e.g. colors will be taken in [dx,1-dx]).
+    """
     palette = [colormap(dx + (1.0-dx)*i/float(n-1)) for i in range(n)]     
-
     return palette
-
 
 def plotsGrid(n,plotfunc,gridw=None,gridh=None,sharex=False,sharey=False,diagonalnoshare=False):
     """Uses a user defined plotting function to create a grid of plots.
 
     Arguments:
-    n -- the total number
+    n -- the total number of plots.
     plotfunc -- a user-defined function that takes figure index, x and y integer grid coordinates, grid width, grid height and axes and plots
         the desired plots grid entry at (x,y).
             plotfunc(i,x,y,gridw,gridh,ax)
