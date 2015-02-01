@@ -12,12 +12,12 @@ def getPalette(n,colormap = plt.cm.rainbow, dx =0.1):
 
     Arguments:
     n -- the total number of colors
-    
+
     Keyword Argumnts:
     colormap -- the base colormap to use to instantiate the colors.
     dx -- the symmetric distance to set from the end point of the colormap (e.g. colors will be taken in [dx,1-dx]).
     """
-    palette = [colormap(dx + (1.0-dx)*i/float(n-1)) for i in range(n)]     
+    palette = [colormap(dx + (1.0-dx)*i/float(n-1)) for i in range(n)]
     return palette
 
 def plotsGrid(n,plotfunc,gridw=None,gridh=None,sharex=False,sharey=False,diagonalnoshare=False):
@@ -49,11 +49,11 @@ def plotsGrid(n,plotfunc,gridw=None,gridh=None,sharex=False,sharey=False,diagona
 
     ax = None
     for i in range(n):
-        
+
         x = i%gridw
         y = i/gridw
-        
-        if diagonalnoshare and x==y: 
+
+        if diagonalnoshare and x==y:
             plt.subplot(gridh,gridw,i+1)
         else:
             if sharex and sharey:
@@ -151,7 +151,7 @@ def customboxplot(data,x=1,percentiles=(25,50,75),dataplot=True,mean=False,banno
     ax.set_xticklabels([])
     ax.set_xticks([])
 
-def plotECDF(data,color='k',linewidth=1.0,label=None):
+def plotECDF(data,color='k',linewidth=1.0,linestyle='-',label=None):
     """Plots the empirical cumulative distribution function of the given data.
 
     Arguments:
@@ -160,14 +160,15 @@ def plotECDF(data,color='k',linewidth=1.0,label=None):
     Keyword arguments:
         color -- the color of the plot line.
         linewidth -- the width of the plot line.
+        linestyle -- the style of the plotted line.
         label -- the label of the plot line, for legend purpose.
     """
     x = sorted(data)
     y = np.array(range(1,len(x)+1))/float(len(x))
     if label == None:
-        plt.plot(x,y,color=color,linewidth=linewidth)
+        return plt.plot(x,y,color=color,linewidth=linewidth,linestyle=linestyle)
     else:
-        plt.plot(x,y,color=color,label=label,linewidth=linewidth)
+        return plt.plot(x,y,color=color,label=label,linewidth=linewidth,linestyle=linestyle)
 
 
 def plotHeatMap(values,xlabels,ylabels,colormap=None, minvalue=None,maxvalue=None,calpha=0.8,ax=None,annotate=False):
@@ -241,7 +242,7 @@ def plotHeatMap(values,xlabels,ylabels,colormap=None, minvalue=None,maxvalue=Non
     for t in ax.yaxis.get_major_ticks():
         t.tick1On = False
         t.tick2On = False
-        
+
     if annotate:
         for y in range(colors.shape[0]):
             for x in range(colors.shape[1]):
@@ -249,7 +250,7 @@ def plotHeatMap(values,xlabels,ylabels,colormap=None, minvalue=None,maxvalue=Non
                         horizontalalignment='center',
                         verticalalignment='center',
                         )
-        
-        
-        
+
+
+
 
