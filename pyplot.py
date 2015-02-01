@@ -17,8 +17,15 @@ def getPalette(n,colormap = plt.cm.rainbow, dx =0.1):
     colormap -- the base colormap to use to instantiate the colors.
     dx -- the symmetric distance to set from the end point of the colormap (e.g. colors will be taken in [dx,1-dx]).
     """
-    palette = [colormap(dx + (1.0-dx)*i/float(n-1)) for i in range(n)]
-    return palette
+    if dx < 0 or dx > 1:
+        raise ValueError('Invalid dx (%.2f), must be in [0,1].' % dx)
+    if n <= 0:
+        raise ValueError('Number of colors for palette (%d) must be strictly positive.' % n)
+    elif n == 1:
+        return [colormap(1.0-dx)]
+    else:
+        palette = [colormap(dx + (1.0-dx)*i/float(n-1)) for i in range(n)]
+        return palette
 
 def plotsGrid(n,plotfunc,gridw=None,gridh=None,sharex=False,sharey=False,diagonalnoshare=False):
     """Uses a user defined plotting function to create a grid of plots.
