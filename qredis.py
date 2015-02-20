@@ -44,3 +44,25 @@ class Queue(object):
 			else:
 				item = None
 		return item
+
+class Stack(Queue):
+    def get(self,block=True, timeout=None):
+		"""Remove and return an item from the stack. 
+
+		If optional args block is true and timeout is None (the default), block
+		if necessary until an item is available."""
+
+		if block:
+			value = self.__db.brpop(self.key, timeout=timeout)
+			if value != 'nil' and value:
+				item = json.loads(value[1])
+			else:
+				item = None
+		else:
+			value = self.__db.rpop(self.key)
+			if value != 'nil' and value:
+				item = json.loads(value)
+			else:
+				item = None
+		return item
+
