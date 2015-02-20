@@ -57,13 +57,13 @@ class Stack(Queue):
 		if necessary until an item is available."""
 
 		if block:
-			value = Queue.__db.brpop(self.key, timeout=timeout)
+			value = self.__db.brpop(self.key, timeout=timeout)
 			if value != 'nil' and value:
 				item = json.loads(value[1])
 			else:
 				item = None
 		else:
-			value = Queue.__db.rpop(self.key)
+			value = self.__db.rpop(self.key)
 			if value != 'nil' and value:
 				item = json.loads(value)
 			else:
