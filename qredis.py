@@ -45,25 +45,44 @@ class Queue(object):
 				item = None
 		return item
 
-class Stack(Queue):
+class Stack(object):
+	"""Simple stack with redis backend and json encoding/decoding of items."""
 
-	def __init__(self, name, namespace='queue', **redis_kwargs):
-		Queue.__init__(self,name,namespace,**redis_kwargs)
+	def __init__(self, name, namespace='stack', **redis_kwargs):
+		"""The default connection parameters are: host='localhost', port=6379, db=0"""
+		self.__db = redis.StrictRedis(**redis_kwargs)
+		name = '%s:%s' %(namespace, name)
+		self.key = name
 
-	def get(self,block=True, timeout=None):
+	def qsize(self):
+		"""Return the approximate size of the stack."""
+		return self.__db.llen(self.key)
+
+	def empty(self):
+		"""Return True if the stack is empty, False otherwise."""
+		return self.qsize() == 0
+
+	def put(self, item):
+		"""Put item into the stack without blocking."""
+
+		value = json.dumps(item)
+
+		self.__db.rpush(self.key, value)
+
+	def get(self, block=True, timeout=None):
 		"""Remove and return an item from the stack. 
 
 		If optional args block is true and timeout is None (the default), block
 		if necessary until an item is available."""
 
 		if block:
-			value = self.Queue.__db.brpop(self.key, timeout=timeout)
+			value = self.__db.brpop(self.key, timeout=timeout)
 			if value != 'nil' and value:
 				item = json.loads(value[1])
 			else:
 				item = None
 		else:
-			value = self.Queue.__db.rpop(self.key)
+			value = self.__db.rpop(self.key)
 			if value != 'nil' and value:
 				item = json.loads(value)
 			else:
