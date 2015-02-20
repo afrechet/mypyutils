@@ -46,7 +46,11 @@ class Queue(object):
 		return item
 
 class Stack(Queue):
-    def get(self,block=True, timeout=None):
+
+	def __init__(self, name, namespace='queue', **redis_kwargs):
+		Queue.__init__(self,name,namespace,**redis_kwargs)
+
+	def get(self,block=True, timeout=None):
 		"""Remove and return an item from the stack. 
 
 		If optional args block is true and timeout is None (the default), block
