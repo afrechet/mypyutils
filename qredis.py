@@ -1,3 +1,6 @@
+#TODO - have a common implementation for Queue and Stack where only the get method is changed.
+#TODO - replace the "use_json" kwarg for the Stack with a class decorator, and have regular Queue and Stack only deal in strings.
+
 import redis
 import json
 
@@ -62,14 +65,17 @@ class Stack(object):
 		"""Return True if the stack is empty, False otherwise."""
 		return self.qsize() == 0
 
-	def put(self, item):
+	def put(self, item, use_json = True):
 		"""Put item into the stack without blocking."""
 
-		value = json.dumps(item)
+		if use_json:
+			value = json.dumps(item)
+		else:
+			value = item
 
 		self.__db.rpush(self.key, value)
 
-	def get(self, block=True, timeout=None):
+	def get(self, block=True, timeout=None, use_json = True):
 		"""Remove and return an item from the stack. 
 
 		If optional args block is true and timeout is None (the default), block
@@ -78,14 +84,18 @@ class Stack(object):
 		if block:
 			value = self.__db.brpop(self.key, timeout=timeout)
 			if value != 'nil' and value:
-				item = json.loads(value[1])
+				item = value[1]
 			else:
 				item = None
 		else:
 			value = self.__db.rpop(self.key)
 			if value != 'nil' and value:
-				item = json.loads(value)
+				item = value
 			else:
 				item = None
+
+		if use_json:
+			item = json.loads(item)
+
 		return item
 
